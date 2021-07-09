@@ -1,0 +1,559 @@
+{
+	"info": {
+		"_postman_id": "a758b71e-760f-4b1c-9c9a-c24c67c05da8",
+		"name": "Swan Project Access Token",
+		"description": "The project access token is used when you act on your own behalf rather than on behalf of a user. To get a project access token, you have to use the OAuth2 flow (also called grant type): Client Credentials.\nHere are a few queries/mutations that may be useful as you get started with your integration.\nFor more details, check out our documentation at https://docs.swan.io/",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Generate individual onboarding URL",
+			"request": {
+				"auth": {
+					"type": "oauth2",
+					"oauth2": [
+						{
+							"key": "tokenType",
+							"value": "",
+							"type": "string"
+						},
+						{
+							"key": "accessToken",
+							"value": "",
+							"type": "string"
+						},
+						{
+							"key": "tokenName",
+							"value": "MyProjectToken",
+							"type": "string"
+						},
+						{
+							"key": "grant_type",
+							"value": "client_credentials",
+							"type": "string"
+						},
+						{
+							"key": "clientSecret",
+							"value": "CLIENT_SECRET_TO_REPLACE",
+							"type": "string"
+						},
+						{
+							"key": "clientId",
+							"value": "CLIENT_ID_TO_REPLACE",
+							"type": "string"
+						},
+						{
+							"key": "accessTokenUrl",
+							"value": "https://oauth.swan.io/oauth2/token",
+							"type": "string"
+						},
+						{
+							"key": "authUrl",
+							"value": "https://oauth.swan.io/oauth2/auth",
+							"type": "string"
+						},
+						{
+							"key": "redirect_uri",
+							"value": "https://www.swan.io",
+							"type": "string"
+						},
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						},
+						{
+							"key": "code_verifier",
+							"value": "",
+							"type": "string"
+						},
+						{
+							"key": "useBrowser",
+							"value": false,
+							"type": "boolean"
+						},
+						{
+							"key": "challengeAlgorithm",
+							"value": "S256",
+							"type": "string"
+						},
+						{
+							"key": "state",
+							"value": "12341232342342",
+							"type": "string"
+						},
+						{
+							"key": "scope",
+							"value": "openid offline",
+							"type": "string"
+						},
+						{
+							"key": "client_authentication",
+							"value": "body",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "mutation MyMutation {\n  onboardIndividualAccountHolder(\n    input: {\n        email: \"myname@mycompany.com\", \n        employmentStatus: Employee, \n        redirectUrl: \"https://www.swan.io\", \n        monthlyIncome: LessThan500, \n        residencyAddress: {\n            addressLine1: \"1 Rue de la Paix\", \n            city: \"Paris\", \n            country: \"FRANCE\", \n            postalCode: \"75002\"\n            }\n    }\n  ) \n  {\n    ... on OnboardIndividualAccountHolderSuccessPayload {\n      __typename\n      onboarding {\n        onboardingUrl\n        redirectUrl\n      }\n    }\n    ... on ForbiddenRejection {\n      __typename\n      message\n    }\n  }\n}\n",
+						"variables": ""
+					}
+				},
+				"url": {
+					"raw": "https://api.swan.io/sandbox-partner/graphql",
+					"protocol": "https",
+					"host": [
+						"api",
+						"swan",
+						"io"
+					],
+					"path": [
+						"sandbox-partner",
+						"graphql"
+					]
+				},
+				"description": "Generate an onboarding URL for an individual person and pre-load the form with their personal data.\nIf you have the info, try to fill in as many fields as possible. This streamlines the onboarding process."
+			},
+			"response": []
+		},
+		{
+			"name": "Generate company onboarding URL",
+			"request": {
+				"auth": {
+					"type": "oauth2",
+					"oauth2": [
+						{
+							"key": "tokenName",
+							"value": "MyProjectToken",
+							"type": "string"
+						},
+						{
+							"key": "accessTokenUrl",
+							"value": "https://oauth.swan.io/oauth2/token",
+							"type": "string"
+						},
+						{
+							"key": "grant_type",
+							"value": "client_credentials",
+							"type": "string"
+						},
+						{
+							"key": "clientSecret",
+							"value": "CLIENT_SECRET_TO_REPLACE",
+							"type": "string"
+						},
+						{
+							"key": "clientId",
+							"value": "CLIENT_ID_TO_REPLACE",
+							"type": "string"
+						},
+						{
+							"key": "authUrl",
+							"value": "https://oauth.swan.io/oauth2/auth",
+							"type": "string"
+						},
+						{
+							"key": "redirect_uri",
+							"value": "https://www.swan.io",
+							"type": "string"
+						},
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						},
+						{
+							"key": "code_verifier",
+							"value": "",
+							"type": "string"
+						},
+						{
+							"key": "useBrowser",
+							"value": false,
+							"type": "boolean"
+						},
+						{
+							"key": "challengeAlgorithm",
+							"value": "S256",
+							"type": "string"
+						},
+						{
+							"key": "state",
+							"value": "12341232342342",
+							"type": "string"
+						},
+						{
+							"key": "scope",
+							"value": "openid offline",
+							"type": "string"
+						},
+						{
+							"key": "client_authentication",
+							"value": "body",
+							"type": "string"
+						},
+						{
+							"key": "tokenType",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "mutation MyMutation {\n  onboardCompanyAccountHolder(\n    input: {\n      businessActivity: Arts, \n      businessActivityDescription: \"I sell great art things\", \n      companyType: Company, \n      email: \"tom@myartbusiness.com\", \n      isRegistered: false, \n      language: \"EN\", \n      monthlyPaymentVolume: Between10000And50000, \n      name: \"My Art Business\", \n      redirectUrl: \"https://www.swan.io\", \n      registrationNumber: \"123123\", \n      residencyAddress: {\n        addressLine1: \"1 rue de la Paix\", \n        city: \"Paris\", \n        country: \"FRA\", \n        postalCode: \"75002\"\n      }, \n      \n      ultimateBeneficialOwners: [\n        {\n        individualFirstName: \"Jean\", \n        individualLastName: \"Doe\", \n        parentCompanyShareRatio: 10, \n        reference: \"456456\", \n        type: DirectIndividual, \n        parentCompanyReference: \"234234\", \n        individualBirthDate: \"01/01/1980\"\n      }\n    {\n     \t\tcompanyName: \"MyHolding\", \n        companyRegistrationNumber: \"987654321\", \n        parentCompanyShareRatio: 90, \n        reference: \"12345\", \n        type: DirectCompany, \n        parentCompanyReference: \"456456\", \n      }{\n        individualFirstName: \"Pierre\", \n        individualLastName: \"Paul\", \n        parentCompanyShareRatio: 100, \n        reference: \"9182746\", \n        type: IndirectIndividual, \n        parentCompanyReference: \"12345\", \n        individualBirthDate: \"01/01/1980\"\n      }\n      ]\n    }\n  ) {\n    ... on ForbiddenRejection {\n      __typename\n      message\n    }\n    ... on OnboardCompanyAccountHolderSuccessPayload {\n      __typename\n      onboarding {\n        onboardingUrl\n        redirectUrl\n      }\n    }\n  }\n}",
+						"variables": ""
+					}
+				},
+				"url": {
+					"raw": "https://api.swan.io/sandbox-partner/graphql",
+					"protocol": "https",
+					"host": [
+						"api",
+						"swan",
+						"io"
+					],
+					"path": [
+						"sandbox-partner",
+						"graphql"
+					]
+				},
+				"description": "Generate an onboarding URL for a company and pre-load the form with the company’s data. We highly recommend filling in all fields, especially Ultimate Beneficial Owners. The example below shows a company with one direct physical owner, and one indirect physical person through a direct company."
+			},
+			"response": []
+		},
+		{
+			"name": "Account Holder status",
+			"request": {
+				"auth": {
+					"type": "oauth2",
+					"oauth2": [
+						{
+							"key": "tokenType",
+							"value": "",
+							"type": "string"
+						},
+						{
+							"key": "accessToken",
+							"value": "",
+							"type": "string"
+						},
+						{
+							"key": "client_authentication",
+							"value": "body",
+							"type": "string"
+						},
+						{
+							"key": "tokenName",
+							"value": "MyProjectToken",
+							"type": "string"
+						},
+						{
+							"key": "accessTokenUrl",
+							"value": "https://oauth.swan.io/oauth2/token",
+							"type": "string"
+						},
+						{
+							"key": "clientSecret",
+							"value": "CLIENT_SECRET_TO_REPLACE",
+							"type": "string"
+						},
+						{
+							"key": "clientId",
+							"value": "CLIENT_ID_TO_REPLACE",
+							"type": "string"
+						},
+						{
+							"key": "grant_type",
+							"value": "client_credentials",
+							"type": "string"
+						},
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "query accounts {\n  onboardings {\n    edges {\n      node {\n        accountHolder {\n          statusInfo {\n            status\n            ... on AccountHolderCanceledStatusInfo {\n              __typename\n              reason\n              status\n            }\n            ... on AccountHolderEnabledStatusInfo {\n              __typename\n              status\n            }\n            ... on AccountHolderSuspendedStatusInfo {\n              __typename\n              reason\n              status\n            }\n          }\n          verificationStatus\n          info {\n            name\n          }\n          id\n        }\n        email\n      }\n    }\n  }\n}\n",
+						"variables": ""
+					}
+				},
+				"url": {
+					"raw": "https://api.swan.io/sandbox-partner/graphql",
+					"protocol": "https",
+					"host": [
+						"api",
+						"swan",
+						"io"
+					],
+					"path": [
+						"sandbox-partner",
+						"graphql"
+					]
+				},
+				"description": "Keep track of your customer’s onboarding process. Once onboarding is done, keep track of the account holder that was created."
+			},
+			"response": []
+		},
+		{
+			"name": "Get Account details",
+			"request": {
+				"auth": {
+					"type": "oauth2",
+					"oauth2": [
+						{
+							"key": "tokenType",
+							"value": "",
+							"type": "string"
+						},
+						{
+							"key": "client_authentication",
+							"value": "body",
+							"type": "string"
+						},
+						{
+							"key": "tokenName",
+							"value": "MyProjectToken",
+							"type": "string"
+						},
+						{
+							"key": "accessTokenUrl",
+							"value": "https://oauth.swan.io/oauth2/token",
+							"type": "string"
+						},
+						{
+							"key": "clientSecret",
+							"value": "CLIENT_SECRET_TO_REPLACE",
+							"type": "string"
+						},
+						{
+							"key": "clientId",
+							"value": "CLIENT_ID_TO_REPLACE",
+							"type": "string"
+						},
+						{
+							"key": "grant_type",
+							"value": "client_credentials",
+							"type": "string"
+						},
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "query accounts {\n  accountHolders {\n    edges {\n      node {\n        accounts {\n          edges {\n            node {\n              number\n              IBAN\n              BIC\n              id\n              virtualIbanEntries {\n                edges {\n                  node {\n                    id\n                    IBAN\n                    BIC\n                  }\n                }\n              }\n              memberships {\n                edges {\n                  node {\n                    user {\n                      lastName\n                      firstName\n                      mobilePhoneNumber\n                    }\n                    email\n                    canInitiatePayments\n                    canManageAccountMembership\n                    canManageBeneficiaries\n                    canViewAccount\n                    createdAt\n                    legalRepresentative\n                    statusInfo {\n                      status\n                    }\n                    updatedAt\n                  }\n                }\n              }\n              balances {\n                available {\n                  currency\n                  value\n                }\n                pending {\n                  currency\n                  value\n                }\n                booked {\n                  currency\n                  value\n                }\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n}\n",
+						"variables": ""
+					}
+				},
+				"url": {
+					"raw": "https://api.swan.io/sandbox-partner/graphql",
+					"protocol": "https",
+					"host": [
+						"api",
+						"swan",
+						"io"
+					],
+					"path": [
+						"sandbox-partner",
+						"graphql"
+					]
+				},
+				"description": "Make the most of your account details. This can be used to create a dashboard."
+			},
+			"response": []
+		},
+		{
+			"name": "Get Transaction list and details",
+			"request": {
+				"auth": {
+					"type": "oauth2",
+					"oauth2": [
+						{
+							"key": "tokenType",
+							"value": "",
+							"type": "string"
+						},
+						{
+							"key": "accessToken",
+							"value": "",
+							"type": "string"
+						},
+						{
+							"key": "client_authentication",
+							"value": "body",
+							"type": "string"
+						},
+						{
+							"key": "tokenName",
+							"value": "MyProjectToken",
+							"type": "string"
+						},
+						{
+							"key": "accessTokenUrl",
+							"value": "https://oauth.swan.io/oauth2/token",
+							"type": "string"
+						},
+						{
+							"key": "clientSecret",
+							"value": "CLIENT_SECRET_TO_REPLACE",
+							"type": "string"
+						},
+						{
+							"key": "clientId",
+							"value": "CLIENT_ID_TO_REPLACE",
+							"type": "string"
+						},
+						{
+							"key": "grant_type",
+							"value": "client_credentials",
+							"type": "string"
+						},
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "query MyQuery {\n  accounts {\n    edges {\n      node {\n        name\n        number\n        IBAN\n        transactions {\n          edges {\n            node {\n              amount {\n                currency\n                value\n              }\n              bookedBalanceAfter {\n                currency\n                value\n              }\n              counterparty\n              createdAt\n              id\n              label\n              payment {\n                createdAt\n                id\n                statusInfo {\n                  status\n                  ... on PaymentConsentPending {\n                    __typename\n                    consent {\n                      createdAt\n                      startedAt\n                      status\n                      updatedAt\n                    }\n                    status\n                  }\n                  ... on PaymentInitiated {\n                    __typename\n                    status\n                  }\n                  ... on PaymentRejected {\n                    __typename\n                    reason\n                    status\n                  }\n                }\n                updatedAt\n              }\n              paymentId\n              paymentMethodIdentifier\n              paymentProduct\n              reference\n              side\n              statusInfo {\n                status\n                ... on BookedTransactionStatusInfo {\n                  __typename\n                  bookingDate\n                  status\n                  valueDate\n                }\n                ... on CanceledTransactionStatusInfo {\n                  canceledDate\n                  status\n                }\n                ... on PendingTransactionStatusInfo {\n                  pendingEndDate\n                  status\n                }\n                ... on RejectedTransactionStatusInfo {\n                  __typename\n                  reason\n                  status\n                }\n                ... on UpcomingTransactionStatusInfo {\n                  __typename\n                  executionDate\n                  status\n                }\n              }\n              type\n              updatedAt\n              ... on SEPACreditTransferTransaction {\n                id\n                amount {\n                  currency\n                  value\n                }\n                bookedBalanceAfter {\n                  currency\n                  value\n                }\n                counterparty\n                createdAt\n                creditor {\n                  name\n                  ... on SEPACreditTransferInCreditor {\n                    virtualIBANEntryId\n                    accountNumber\n                    maskedIBAN\n                    name\n                  }\n                  ... on SEPACreditTransferInternalOutCreditor {\n                    __typename\n                    accountNumber\n                    beneficiary {\n                      accountNumber\n                      id\n                      isMyOwnIban\n                      name\n                    }\n                    name\n                  }\n                  ... on SEPACreditTransferOutCreditor {\n                    __typename\n                    beneficiary {\n                      isMyOwnIban\n                      maskedIBAN\n                      name\n                    }\n                    maskedIBAN\n                    name\n                  }\n                }\n                debtor {\n                  name\n                  ... on SEPACreditTransferInDebtor {\n                    __typename\n                    maskedIBAN\n                    name\n                  }\n                  ... on SEPACreditTransferInternalInDebtor {\n                    __typename\n                    accountNumber\n                    name\n                  }\n                  ... on SEPACreditTransferOutDebtor {\n                    __typename\n                    maskedIBAN\n                    name\n                    accountNumber\n                  }\n                }\n                label\n                paymentId\n                paymentMethodIdentifier\n                paymentProduct\n                reference\n                side\n                statusInfo {\n                  status\n                }\n                type\n                updatedAt\n              }\n            }\n          }\n        }\n\n      }\n    }\n  }\n}\n",
+						"variables": ""
+					}
+				},
+				"url": {
+					"raw": "https://api.swan.io/sandbox-partner/graphql",
+					"protocol": "https",
+					"host": [
+						"api",
+						"swan",
+						"io"
+					],
+					"path": [
+						"sandbox-partner",
+						"graphql"
+					]
+				},
+				"description": "Keep track of all transactions whether Booked, Pending, or Rejected. A lot of this data can help you with reconciliation. In the case of incoming payments by virtual IBAN, you can retrieve the virtual IBAN ID."
+			},
+			"response": []
+		},
+		{
+			"name": "Add Virtual IBAN",
+			"request": {
+				"auth": {
+					"type": "oauth2",
+					"oauth2": [
+						{
+							"key": "tokenType",
+							"value": "",
+							"type": "string"
+						},
+						{
+							"key": "client_authentication",
+							"value": "body",
+							"type": "string"
+						},
+						{
+							"key": "tokenName",
+							"value": "MyProjectToken",
+							"type": "string"
+						},
+						{
+							"key": "accessTokenUrl",
+							"value": "https://oauth.swan.io/oauth2/token",
+							"type": "string"
+						},
+						{
+							"key": "clientSecret",
+							"value": "CLIENT_SECRET_TO_REPLACE",
+							"type": "string"
+						},
+						{
+							"key": "clientId",
+							"value": "CLIENT_ID_TO_REPLACE",
+							"type": "string"
+						},
+						{
+							"key": "grant_type",
+							"value": "client_credentials",
+							"type": "string"
+						},
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "mutation MyMutation {\n  addVirtualIbanEntry(input: {accountId: \"01077242-d46c-44e7-a382-aaeb41b13059\"}) {\n    ... on AddVirtualIbanEntrySuccessPayload {\n      __typename\n      virtualIbanEntry {\n        IBAN\n        status\n      }\n    }\n    ... on AccountNotFoundRejection {\n      id\n      message\n    }\n  }\n}\n",
+						"variables": ""
+					}
+				},
+				"url": {
+					"raw": "https://api.swan.io/sandbox-partner/graphql",
+					"protocol": "https",
+					"host": [
+						"api",
+						"swan",
+						"io"
+					],
+					"path": [
+						"sandbox-partner",
+						"graphql"
+					]
+				},
+				"description": "Add a new virtual IBAN to a given account. For this query, you'll need to add the account ID."
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

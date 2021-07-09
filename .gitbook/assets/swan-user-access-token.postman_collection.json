@@ -1,0 +1,401 @@
+{
+	"info": {
+		"_postman_id": "85395ecb-e5ab-4cb6-bf87-73ce12295308",
+		"name": "Swan User Access Token",
+		"description": "The User Access Token is used when you act on behalf of an individual user. To get a user access token, you have to use the OAuth2 flow (also called grant type): Authorization code. It's totally similar to how users log in to a web application using their Facebook or Google account.\nHere are a few queries/mutations that may be useful as you get started with your integration.\nFor more details, check out our documentation at https://docs.swan.io/",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get user info + account info",
+			"protocolProfileBehavior": {
+				"followAuthorizationHeader": true,
+				"disableUrlEncoding": true
+			},
+			"request": {
+				"auth": {
+					"type": "oauth2",
+					"oauth2": [
+						{
+							"key": "redirect_uri",
+							"value": "https://www.swan.io",
+							"type": "string"
+						},
+						{
+							"key": "grant_type",
+							"value": "authorization_code",
+							"type": "string"
+						},
+						{
+							"key": "clientSecret",
+							"value": "CLIENT_SECRET_TO_REPLACE",
+							"type": "string"
+						},
+						{
+							"key": "code_verifier",
+							"value": "",
+							"type": "string"
+						},
+						{
+							"key": "useBrowser",
+							"value": false,
+							"type": "boolean"
+						},
+						{
+							"key": "scope",
+							"value": "openid offline",
+							"type": "string"
+						},
+						{
+							"key": "challengeAlgorithm",
+							"value": "S256",
+							"type": "string"
+						},
+						{
+							"key": "client_authentication",
+							"value": "body",
+							"type": "string"
+						},
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						},
+						{
+							"key": "state",
+							"value": "12341232342342",
+							"type": "string"
+						},
+						{
+							"key": "authUrl",
+							"value": "https://oauth.swan.io/oauth2/auth",
+							"type": "string"
+						},
+						{
+							"key": "tokenName",
+							"value": "MyUSerToken",
+							"type": "string"
+						},
+						{
+							"key": "accessTokenUrl",
+							"value": "https://oauth.swan.io/oauth2/token",
+							"type": "string"
+						},
+						{
+							"key": "clientId",
+							"value": "CLIENT_ID_TO_REPLACE",
+							"type": "string"
+						},
+						{
+							"key": "tokenType",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "query accounts {\n  user {\n    firstName\n    lastName\n    mobilePhoneNumber\n    authenticators {\n      brand\n      model\n      os\n      type\n    }\n  }\naccountMemberships {\n    edges {\n      node {\n        account {\n          id\n          number\n          IBAN\n          balances {\n            available {\n              currency\n              value\n            }\n          }\n        }\n        canInitiatePayments\n        canManageAccountMembership\n        canManageBeneficiaries\n        canViewAccount\n        createdAt\n        email\n        id\n        legalRepresentative\n        statusInfo {\n          status\n          ... on AccountMembershipBindingUserErrorStatusInfo {\n            __typename\n            birthDateMatch\n            firstNameMatch\n            lastNameMatch\n            status\n            restrictedToAlias1: restrictedTo {\n              birthDate\n              firstName\n              lastName\n            }\n          }\n          ... on AccountMembershipConsentPendingStatusInfo {\n            __typename\n            status\n            consent {\n              consentUrl\n            }\n          }\n          ... on AccountMembershipInvitationSentStatusInfo {\n            __typename\n            status\n            restrictedToAlias2: restrictedTo  {\n              birthDate\n              firstName\n              lastName\n            }\n          }\n          ... on AccountMembershipEnabledStatusInfo {\n            __typename\n            status\n          }\n          ... on AccountMembershipDisabledStatusInfo {\n            __typename\n            status\n            reason\n          }\n          ... on AccountMembershipSuspendedStatusInfo {\n            __typename\n            reason\n            status\n          }\n        }\n        updatedAt\n        user {\n          firstName\n          lastName\n          mobilePhoneNumber\n        }\n      }\n    }\n  }\n  accountHolders {\n    edges {\n      node {\n        accounts {\n          edges {\n            node {\n              IBAN\n              BIC\n              virtualIbanEntries {\n                edges {\n                  node {\n                    IBAN\n                    BIC\n                  }\n                }\n              }\n              balances {\n                available {\n                  currency\n                  value\n                }\n              }\n            }\n          }\n        }\n        info {\n          name\n          type\n          ... on AccountHolderCompanyInfo {\n            registrationNumber\n            companyType\n            businessActivity\n            businessActivityDescription\n            monthlyPaymentVolume\n            name\n            type\n            ultimateBeneficialOwners {\n              id\n              parentCompanyShareRatio\n              type\n              ... on UltimateBeneficialDirectOwnerCompanyInfo {\n                id\n                name\n                parentCompanyShareRatio\n                registrationNumber\n                type\n              }\n              ... on UltimateBeneficialDirectOwnerIndividualInfo {\n                id\n                birthDate\n                firstName\n                lastName\n                type\n                parentCompanyShareRatio\n              }\n              ... on UltimateBeneficialIndirectOwnerCompanyInfo {\n                id\n                name\n                parentCompanyReference\n                parentCompanyShareRatio\n                registrationNumber\n                type\n              }\n              ... on UltimateBeneficialIndirectOwnerIndividualInfo {\n                id\n                birthDate\n                firstName\n                lastName\n                parentCompanyReference\n                parentCompanyShareRatio\n                type\n              }\n            }\n          }\n          ... on AccountHolderIndividualInfo {\n            __typename\n            employmentStatus\n            monthlyIncome\n            name\n            type\n            user {\n              firstName\n              lastName\n              mobilePhoneNumber\n            }\n          }\n        }\n      }\n    }\n  }\n}\n  ",
+						"variables": ""
+					}
+				},
+				"url": {
+					"raw": "https://api.swan.io/sandbox-partner/graphql",
+					"protocol": "https",
+					"host": [
+						"api",
+						"swan",
+						"io"
+					],
+					"path": [
+						"sandbox-partner",
+						"graphql"
+					]
+				},
+				"description": "Display user and account information, including account membership. If you want to provide a dashboard to your clients you should use this query."
+			},
+			"response": []
+		},
+		{
+			"name": "Initiate Credit Transfer",
+			"request": {
+				"auth": {
+					"type": "oauth2",
+					"oauth2": [
+						{
+							"key": "redirect_uri",
+							"value": "https://www.swan.io",
+							"type": "string"
+						},
+						{
+							"key": "useBrowser",
+							"value": false,
+							"type": "boolean"
+						},
+						{
+							"key": "grant_type",
+							"value": "authorization_code",
+							"type": "string"
+						},
+						{
+							"key": "challengeAlgorithm",
+							"value": "S256",
+							"type": "string"
+						},
+						{
+							"key": "state",
+							"value": "12341232342342",
+							"type": "string"
+						},
+						{
+							"key": "scope",
+							"value": "openid offline",
+							"type": "string"
+						},
+						{
+							"key": "authUrl",
+							"value": "https://oauth.swan.io/oauth2/auth",
+							"type": "string"
+						},
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						},
+						{
+							"key": "client_authentication",
+							"value": "body",
+							"type": "string"
+						},
+						{
+							"key": "tokenName",
+							"value": "MyUSerToken",
+							"type": "string"
+						},
+						{
+							"key": "accessTokenUrl",
+							"value": "https://oauth.swan.io/oauth2/token",
+							"type": "string"
+						},
+						{
+							"key": "clientSecret",
+							"value": "CLIENT_SECRET_TO_REPLACE",
+							"type": "string"
+						},
+						{
+							"key": "clientId",
+							"value": "CLIENT_ID_TO_REPLACE",
+							"type": "string"
+						},
+						{
+							"key": "tokenType",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "mutation initiateCreditTransfers($input: InitiateCreditTransfersInput!) {\n  initiateCreditTransfers(input: $input) {\n    __typename\n    ... on InitiateCreditTransfersSuccessPayload {\n      __typename\n      payment {\n        id\n        statusInfo {\n          ... on PaymentConsentPending {\n            __typename\n            status\n            consent {\n              id\n              consentUrl\n              redirectUrl\n            }\n          }\n          ... on PaymentInitiated {\n            __typename\n            status\n          }\n          ... on PaymentRejected {\n            __typename\n            reason\n            status\n          }\n        }\n      }\n    }\n    ... on AccountNotFoundRejection {\n      __typename\n      message\n    }\n    ... on ForbiddenRejection {\n      __typename\n      message\n    }\n  }\n}\n",
+						"variables": "{\n  \"input\": {\n    \"accountNumber\": \"ACCOUNT_NUMBER\",\n    \"consentRedirectUrl\": \"https://swan.io\",\n    \"creditTransfers\":\n      {\n        \"sepaBeneficiary\": {\n          \"iban\": \"FR8510096000508296769926Z32\",\n          \"name\": \"Michel Dupont\",\n          \"isMyOwnIban\": false,\n          \"save\": false\n        },\n        \"amount\": {\n          \"currency\": \"EUR\",\n          \"value\": 1500\n        },\n        \"reference\": \"contract 1234\",\n        \"label\": \"June rent\"\n      }\n  }\n}"
+					}
+				},
+				"url": {
+					"raw": "https://api.swan.io/sandbox-partner/graphql",
+					"protocol": "https",
+					"host": [
+						"api",
+						"swan",
+						"io"
+					],
+					"path": [
+						"sandbox-partner",
+						"graphql"
+					]
+				},
+				"description": "Initiate one SEPA credit transfer. This generates a consentURL which redirects the user to approve the operation through Swan app.\nDon't forget to replace the ACCOUNT_NUMBER variable."
+			},
+			"response": []
+		},
+		{
+			"name": "Initiate multiple Credit Transfers",
+			"request": {
+				"auth": {
+					"type": "oauth2",
+					"oauth2": [
+						{
+							"key": "redirect_uri",
+							"value": "https://www.swan.io",
+							"type": "string"
+						},
+						{
+							"key": "useBrowser",
+							"value": false,
+							"type": "boolean"
+						},
+						{
+							"key": "grant_type",
+							"value": "authorization_code",
+							"type": "string"
+						},
+						{
+							"key": "challengeAlgorithm",
+							"value": "S256",
+							"type": "string"
+						},
+						{
+							"key": "state",
+							"value": "12341232342342",
+							"type": "string"
+						},
+						{
+							"key": "scope",
+							"value": "openid offline",
+							"type": "string"
+						},
+						{
+							"key": "authUrl",
+							"value": "https://oauth.swan.io/oauth2/auth",
+							"type": "string"
+						},
+						{
+							"key": "addTokenTo",
+							"value": "header",
+							"type": "string"
+						},
+						{
+							"key": "client_authentication",
+							"value": "body",
+							"type": "string"
+						},
+						{
+							"key": "tokenName",
+							"value": "MyUSerToken",
+							"type": "string"
+						},
+						{
+							"key": "accessTokenUrl",
+							"value": "https://oauth.swan.io/oauth2/token",
+							"type": "string"
+						},
+						{
+							"key": "clientSecret",
+							"value": "CLIENT_SECRET_TO_REPLACE",
+							"type": "string"
+						},
+						{
+							"key": "clientId",
+							"value": "CLIENT_ID_TO_REPLACE",
+							"type": "string"
+						},
+						{
+							"key": "tokenType",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "graphql",
+					"graphql": {
+						"query": "mutation initiateCreditTransfers($input: InitiateCreditTransfersInput!) {\n  initiateCreditTransfers(input: $input) {\n    __typename\n    ... on InitiateCreditTransfersSuccessPayload {\n      __typename\n      payment {\n        id\n        statusInfo {\n          ... on PaymentConsentPending {\n            __typename\n            status\n            consent {\n              id\n              consentUrl\n              redirectUrl\n            }\n          }\n          ... on PaymentInitiated {\n            __typename\n            status\n          }\n          ... on PaymentRejected {\n            __typename\n            reason\n            status\n          }\n        }\n      }\n    }\n    ... on AccountNotFoundRejection {\n      __typename\n      message\n    }\n    ... on ForbiddenRejection {\n      __typename\n      message\n    }\n  }\n}\n",
+						"variables": "{\n  \"input\": {\n    \"accountNumber\": \"ACCOUNT_NUMBER\",\n    \"consentRedirectUrl\": \"https://swan.io\",\n    \"creditTransfers\":\n      [\n        {\n            \"sepaBeneficiary\": {\n            \"iban\": \"FR8510096000508296769926Z32\",\n            \"name\": \"Michel Dupont\",\n            \"isMyOwnIban\": false,\n            \"save\": false\n            },\n            \"amount\": {\n            \"currency\": \"EUR\",\n            \"value\": 1500\n            },\n            \"reference\": \"contract 1234\",\n            \"label\": \"June rent\"\n        },\n        {\n            \"sepaBeneficiary\": {\n            \"iban\": \"DE90500105171716813118\",\n            \"name\": \"Johannes Schmidt\",\n            \"isMyOwnIban\": false,\n            \"save\": false\n            },\n            \"amount\": {\n            \"currency\": \"EUR\",\n            \"value\": 2400\n            },\n            \"reference\": \"contract 6451\",\n            \"label\": \"June rent\"\n        }\n      ]\n  }\n}"
+					}
+				},
+				"url": {
+					"raw": "https://api.swan.io/sandbox-partner/graphql",
+					"protocol": "https",
+					"host": [
+						"api",
+						"swan",
+						"io"
+					],
+					"path": [
+						"sandbox-partner",
+						"graphql"
+					]
+				},
+				"description": "You can make one consent request for multiple SEPA credit transfers - two in this example. This generates a consentURL which redirects the user to approve the operation through Swan app.\nDon't forget to replace the ACCOUNT_NUMBER variable."
+			},
+			"response": []
+		},
+		{
+			"name": "User refresh token",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "client_id",
+							"value": "CLIENT_ID_TO_REPLACE",
+							"type": "text"
+						},
+						{
+							"key": "client_secret",
+							"value": "CLIENT_SECRET_TO_REPLACE",
+							"type": "text"
+						},
+						{
+							"key": "refresh_token",
+							"value": "",
+							"type": "text"
+						},
+						{
+							"key": "grant_type",
+							"value": "refresh_token",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "https://oauth.swan.io/oauth2/token",
+					"protocol": "https",
+					"host": [
+						"oauth",
+						"swan",
+						"io"
+					],
+					"path": [
+						"oauth2",
+						"token"
+					]
+				},
+				"description": "First, get a new access token using one of the above queries. Then, copy the refresh token and paste it in the body section of the User refresh token."
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
