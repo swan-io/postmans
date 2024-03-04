@@ -1,0 +1,797 @@
+{
+	"info": {
+		"_postman_id": "1056b0a7-e228-4516-9917-4470903d0c50",
+		"name": "SWAN APIs Postman Collection",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "25866049"
+	},
+	"item": [
+		{
+			"name": "Project Token",
+			"item": [
+				{
+					"name": "Onboarding",
+					"item": [
+						{
+							"name": "Generate individual onboarding URL",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation MyMutation($input: OnboardIndividualAccountHolderInput) {\n  onboardIndividualAccountHolder(\n    input: $input\n  ) \n  {\n    ... on OnboardIndividualAccountHolderSuccessPayload {\n      __typename\n      onboarding {\n        onboardingUrl\n        redirectUrl\n      }\n    }\n    ... on ForbiddenRejection {\n      __typename\n      message\n    }\n  }\n}",
+										"variables": "{ \n    \"input\": {\n        \"email\": \"myname@mycompany.com\", \n        \"employmentStatus\": \"Employee\", \n        \"redirectUrl\": \"https://www.swan.io/\", \n        \"monthlyIncome\": \"LessThan500\", \n        \"language\": \"en\",\n        \"residencyAddress\": {\n            \"addressLine1\": \"1 Rue de la Paix\", \n            \"city\": \"Paris\", \n            \"country\": \"FRA\", \n            \"postalCode\": \"75002\"\n            }\n    }\n}"
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}{{ENV}}/graphql",
+									"host": [
+										"{{BASE_URL}}{{ENV}}"
+									],
+									"path": [
+										"graphql"
+									]
+								},
+								"description": "Generate an onboarding URL for an individual person and pre-load the form with their personal data.\nIf you have the info, try to fill in as many fields as possible. This streamlines the onboarding process."
+							},
+							"response": []
+						},
+						{
+							"name": "Generate company onboarding URL",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation MyMutation($input: OnboardCompanyAccountHolderInput) {\n  onboardCompanyAccountHolder(\n    input: $input\n  ) {\n    ... on ForbiddenRejection {\n      __typename\n      message\n    }\n    ... on OnboardCompanyAccountHolderSuccessPayload {\n      __typename\n      onboarding {\n        onboardingUrl\n        redirectUrl\n      }\n    }\n  }\n}",
+										"variables": "{\n    \"input\": {\n      \"businessActivity\": \"Arts\", \n      \"businessActivityDescription\": \"I sell great art things\", \n      \"companyType\": \"Company\", \n      \"email\": \"myname@myartbusiness.com\", \n      \"isRegistered\": false, \n      \"language\": \"EN\", \n      \"monthlyPaymentVolume\": \"Between10000And50000\", \n      \"name\": \"My Art Business\", \n      \"redirectUrl\": \"{{CALLBACK_URL}}\", \n      \"registrationNumber\": \"123123\", \n      \"residencyAddress\": {\n        \"addressLine1\": \"1 rue de la Paix\", \n        \"city\": \"Paris\", \n        \"country\": \"FRA\", \n        \"postalCode\": \"75002\"\n      }, \n\"individualUltimateBeneficialOwners\": [\n        {\n          \"type\": \"HasCapital\",\n          \"birthCity\": \"New York\",\n          \"birthCityPostalCode\": \"10001\",\n          \"birthDate\": \"01/01/1980\",\n          \"direct\": true,\n          \"birthCountryCode\": \"USA\",\n          \"firstName\": \"John\",\n          \"lastName\": \"Doe\",\n          \"totalCapitalPercentage\": 50\n        },\n        {\n          \"type\": \"HasCapital\",\n          \"birthCity\": \"Paris\",\n          \"birthCityPostalCode\": \"75001\",\n          \"birthDate\": \"01/01/1990\",\n          \"birthCountryCode\": \"FRA\",\n          \"firstName\": \"Thomas\",\n          \"lastName\": \"Dupont\",\n          \"totalCapitalPercentage\": 50,\n          \"indirect\":true\n        }\n      ]\n    }\n}"
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}{{ENV}}/graphql",
+									"host": [
+										"{{BASE_URL}}{{ENV}}"
+									],
+									"path": [
+										"graphql"
+									]
+								},
+								"description": "Generate an onboarding URL for a company and pre-load the form with the company’s data. We highly recommend filling in all fields, especially Ultimate Beneficial Owners. The example below shows a company with one direct physical owner, and one indirect physical person through a direct company."
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Account Holder",
+					"item": [
+						{
+							"name": "Account Holder status",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "query accounts {\n  onboardings {\n    edges {\n      node {\n        accountHolder {\n          statusInfo {\n            status\n            ... on AccountHolderCanceledStatusInfo {\n              __typename\n              reason\n              status\n            }\n            ... on AccountHolderEnabledStatusInfo {\n              __typename\n              status\n            }\n            ... on AccountHolderSuspendedStatusInfo {\n              __typename\n              reason\n              status\n            }\n          }\n          verificationStatus\n          info {\n            name\n          }\n          id\n        }\n        email\n      }\n    }\n  }\n}\n",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}{{ENV}}/graphql",
+									"host": [
+										"{{BASE_URL}}{{ENV}}"
+									],
+									"path": [
+										"graphql"
+									]
+								},
+								"description": "Keep track of your customer’s onboarding process. Once onboarding is done, keep track of the account holder that was created."
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Account",
+					"item": [
+						{
+							"name": "Get Account details",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "query accounts {\n  accountHolders {\n    edges {\n      node {\n        accounts {\n          edges {\n            node {\n              number\n              IBAN\n              BIC\n              id\n              virtualIbanEntries {\n                edges {\n                  node {\n                    id\n                    IBAN\n                    BIC\n                  }\n                }\n              }\n              memberships {\n                edges {\n                  node {\n                    user {\n                      lastName\n                      firstName\n                      mobilePhoneNumber\n                    }\n                    email\n                    canInitiatePayments\n                    canManageAccountMembership\n                    canManageBeneficiaries\n                    canViewAccount\n                    createdAt\n                    legalRepresentative\n                    statusInfo {\n                      status\n                    }\n                    updatedAt\n                  }\n                }\n              }\n              balances {\n                available {\n                  currency\n                  value\n                }\n                pending {\n                  currency\n                  value\n                }\n                booked {\n                  currency\n                  value\n                }\n              }\n            }\n          }\n        }\n      }\n    }\n  }\n}\n",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}{{ENV}}/graphql",
+									"host": [
+										"{{BASE_URL}}{{ENV}}"
+									],
+									"path": [
+										"graphql"
+									]
+								},
+								"description": "Make the most of your account details. This can be used to create a dashboard."
+							},
+							"response": []
+						},
+						{
+							"name": "Add Virtual IBAN",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation MyMutation($accountId: ID!) {\n  addVirtualIbanEntry(input: {accountId: $accountId}) {\n    ... on AddVirtualIbanEntrySuccessPayload {\n      __typename\n      virtualIbanEntry {\n        IBAN\n        status\n      }\n    }\n    ... on AccountNotFoundRejection {\n      id\n      message\n    }\n  }\n}\n",
+										"variables": "{\n    \"accountId\": \"1f261b91-2201-413e-aa76-b2e1db6c8a3e\"\n}"
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}{{ENV}}/graphql",
+									"host": [
+										"{{BASE_URL}}{{ENV}}"
+									],
+									"path": [
+										"graphql"
+									]
+								},
+								"description": "Add a new virtual IBAN to a given account. For this query, you'll need to add the account ID."
+							},
+							"response": []
+						},
+						{
+							"name": "Get Transaction list and details",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "query MyQuery {\n  accounts {\n    edges {\n      node {\n        name\n        number\n        IBAN\n        transactions {\n          edges {\n            node {\n              amount {\n                currency\n                value\n              }\n              bookedBalanceAfter {\n                currency\n                value\n              }\n              counterparty\n              createdAt\n              id\n              label\n              payment {\n                createdAt\n                id\n                statusInfo {\n                  status\n                  ... on PaymentConsentPending {\n                    __typename\n                    consent {\n                      createdAt\n                      startedAt\n                      status\n                      updatedAt\n                    }\n                    status\n                  }\n                  ... on PaymentInitiated {\n                    __typename\n                    status\n                  }\n                  ... on PaymentRejected {\n                    __typename\n                    reason\n                    status\n                  }\n                }\n                updatedAt\n              }\n              paymentId\n              paymentMethodIdentifier\n              paymentProduct\n              reference\n              side\n              statusInfo {\n                status\n                ... on BookedTransactionStatusInfo {\n                  __typename\n                  bookingDate\n                  status\n                  valueDate\n                }\n                ... on CanceledTransactionStatusInfo {\n                  canceledDate\n                  status\n                }\n                ... on PendingTransactionStatusInfo {\n                  pendingEndDate\n                  status\n                }\n                ... on RejectedTransactionStatusInfo {\n                  __typename\n                  reason\n                  status\n                }\n                ... on UpcomingTransactionStatusInfo {\n                  __typename\n                  executionDate\n                  status\n                }\n              }\n              type\n              updatedAt\n              ... on SEPACreditTransferTransaction {\n                id\n                amount {\n                  currency\n                  value\n                }\n                bookedBalanceAfter {\n                  currency\n                  value\n                }\n                counterparty\n                createdAt\n                creditor {\n                  name\n                  ... on SEPACreditTransferInCreditor {\n                    virtualIBANEntryId\n                    accountNumber\n                    maskedIBAN\n                    name\n                  }\n                  ... on SEPACreditTransferInternalOutCreditor {\n                    __typename\n                    accountNumber\n                    beneficiary {\n                      accountNumber\n                      id\n                      isMyOwnIban\n                      name\n                    }\n                    name\n                  }\n                  ... on SEPACreditTransferOutCreditor {\n                    __typename\n                    beneficiary {\n                      isMyOwnIban\n                      maskedIBAN\n                      name\n                    }\n                    maskedIBAN\n                    name\n                  }\n                }\n                debtor {\n                  name\n                  ... on SEPACreditTransferInDebtor {\n                    __typename\n                    maskedIBAN\n                    name\n                  }\n                  ... on SEPACreditTransferInternalInDebtor {\n                    __typename\n                    accountNumber\n                    name\n                  }\n                  ... on SEPACreditTransferOutDebtor {\n                    __typename\n                    maskedIBAN\n                    name\n                    accountNumber\n                  }\n                }\n                label\n                paymentId\n                paymentMethodIdentifier\n                paymentProduct\n                reference\n                side\n                statusInfo {\n                  status\n                }\n                type\n                updatedAt\n              }\n            }\n          }\n        }\n\n      }\n    }\n  }\n}\n",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}{{ENV}}/graphql",
+									"host": [
+										"{{BASE_URL}}{{ENV}}"
+									],
+									"path": [
+										"graphql"
+									]
+								},
+								"description": "Keep track of all transactions whether Booked, Pending, or Rejected. A lot of this data can help you with reconciliation. In the case of incoming payments by virtual IBAN, you can retrieve the virtual IBAN ID."
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Capital Deposit",
+					"item": [
+						{
+							"name": "Create Capital Deposit Case",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation MyMutation($input: CreateCapitalDepositCaseInput!) {\n  createCapitalDepositCase(\n    input: $input\n  ) \n  {\n    ... on CreateCapitalDepositCaseSuccessPayload {\n      capitalDepositCase {\n        companyName\n        id\n        companyOnboarding {\n          id\n        }\n        documents {\n          type\n          status\n          downloadUrl\n          id\n          uploadedAt\n        }\n        shareholders {\n          info {\n            ... on IndividualShareholder {\n              __typename\n              firstName\n              lastName\n            }\n            ... on CompanyShareholder {\n              __typename\n              name\n            }\n          }\n          status\n          id\n          onboarding{\n              id\n          }\n          documents {\n            type\n            status\n            downloadUrl\n            id\n            uploadedAt\n          }\n        }\n      }\n    }\n  }\n}",
+										"variables": "{\n    \"input\": {\n      \"companyName\": \"Test company\",\n      \"companyShareholders\": [],\n      \"individualShareholders\": [{\n        \"firstName\": \"John\",\n        \"lastName\": \"Doe\",\n        \"birthDate\": \"1980/12/12\",\n        \"nationality\": \"FRA\",\n        \"capitalDepositAmount\": { \"value\": \"1000\", \"currency\": \"EUR\" },\n        \"onboardingInfo\": {\n            \"email\": \"contact@swan.io\", \n             \"language\":\"fr\",\n            \"employmentStatus\": \"Employee\", \n            \"monthlyIncome\": \"Between1500And3000\", \n            \"residencyAddress\": {\n                \"addressLine1\": \"71 Rue du Faubourg Saint Martin\", \n                \"city\": \"Paris\", \n                \"country\": \"FRA\", \n                \"postalCode\": \"75010\"\n            }\n        }\n      }\n      ],\n      \"totalCapitalDepositAmount\": { \"value\": \"1000\", \"currency\": \"EUR\" },\n      \"onboardingCapitalDepositCompany\": {\n        \"individualUltimateBeneficialOwners\": [{\n            \"type\": \"HasCapital\",\n            \"birthCity\": \"Colombes\",\n            \"birthCityPostalCode\": \"92025\",\n            \"birthCountryCode\": \"FRA\",\n            \"birthDate\": \"1996/12/10\",\n            \"direct\": true,\n            \"firstName\": \"John\",\n            \"lastName\": \"Doe\",\n            \"totalCapitalPercentage\": 100\n            }\n          ],\n          \"accountName\": \"Test company\",\n          \"businessActivity\": \"BusinessAndRetail\",\n          \"businessActivityDescription\": \"It's a test company for a capital deposit test in live\",\n          \"companyType\": \"Company\",\n          \"email\": \"contact@swan.io\",\n          \"isRegistered\": false,\n          \"language\":\"fr\",\n          \"monthlyPaymentVolume\": \"Between10000And50000\",\n          \"name\": \"Capital Deposit Account\",\n          \"residencyAddress\": {\n            \"addressLine1\": \"71 rue du faubourg saint martin\",\n            \"city\": \"Paris\",\n            \"country\": \"FRA\",\n            \"postalCode\": \"75010\"\n          }\n      }\n    }\n}"
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}{{ENV}}/graphql",
+									"host": [
+										"{{BASE_URL}}{{ENV}}"
+									],
+									"path": [
+										"graphql"
+									]
+								},
+								"description": "Generate an onboarding URL for an individual person and pre-load the form with their personal data.\nIf you have the info, try to fill in as many fields as possible. This streamlines the onboarding process."
+							},
+							"response": []
+						}
+					]
+				}
+			],
+			"description": "The project access token is used when you act on your own behalf rather than on behalf of a user. To get a project access token, you have to use the OAuth2 flow (also called grant type): Client Credentials. Here are a few queries/mutations that may be useful as you get started with your integration. For more details, check out our documentation at https://docs.swan.io/\",",
+			"auth": {
+				"type": "oauth2",
+				"oauth2": [
+					{
+						"key": "accessTokenUrl",
+						"value": "{{TOKEN_ENDPOINT}}",
+						"type": "string"
+					},
+					{
+						"key": "client_authentication",
+						"value": "body",
+						"type": "string"
+					},
+					{
+						"key": "scope",
+						"value": "openid offline",
+						"type": "string"
+					},
+					{
+						"key": "clientSecret",
+						"value": "{{CLIENT_SECRET}}",
+						"type": "string"
+					},
+					{
+						"key": "clientId",
+						"value": "{{CLIENT_ID}}",
+						"type": "string"
+					},
+					{
+						"key": "grant_type",
+						"value": "client_credentials",
+						"type": "string"
+					},
+					{
+						"key": "tokenName",
+						"value": "MyProjectToken",
+						"type": "string"
+					},
+					{
+						"key": "addTokenTo",
+						"value": "header",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "User Token",
+			"item": [
+				{
+					"name": "Login",
+					"item": [
+						{
+							"name": "User refresh token",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "formdata",
+									"formdata": [
+										{
+											"key": "client_id",
+											"value": "{{CLIENT_ID}}",
+											"type": "text"
+										},
+										{
+											"key": "client_secret",
+											"value": "{{CLIENT_SECRET}}",
+											"type": "text"
+										},
+										{
+											"key": "refresh_token",
+											"value": "O8PexqAjlaniftTSjya_4vFRdvYez2M_HOqvEOYRL60.N1ytRKLYWJK9-0QlvTnJ8HNDTNvlqIZ3t-niWBumB0U",
+											"type": "text"
+										},
+										{
+											"key": "grant_type",
+											"value": "refresh_token",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{TOKEN_ENDPOINT}}",
+									"host": [
+										"{{TOKEN_ENDPOINT}}"
+									]
+								},
+								"description": "First, get a new access token using one of the above queries. Then, copy the refresh token and paste it in the body section of the User refresh token."
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Account",
+					"item": [
+						{
+							"name": "Get user info + account info",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "query accounts {\n  user {\n    firstName\n    lastName\n    mobilePhoneNumber\n    authenticators {\n      brand\n      model\n      os\n      type\n    }\n  }\n  accountMemberships {\n    edges {\n      node {\n        account {\n          id\n          number\n          IBAN\n          balances {\n            available {\n              currency\n              value\n            }\n          }\n        }\n        canInitiatePayments\n        canManageAccountMembership\n        canManageBeneficiaries\n        canViewAccount\n        createdAt\n        email\n        id\n        legalRepresentative\n        statusInfo {\n          status\n          ... on AccountMembershipBindingUserErrorStatusInfo {\n            __typename\n            lastNameMatchError\n            idVerifiedMatchError\n            firstNameMatchError\n            birthDateMatchError\n            status\n            restrictedToAlias1: restrictedTo {\n              birthDate\n              firstName\n              lastName\n            }\n          }\n          ... on AccountMembershipConsentPendingStatusInfo {\n            __typename\n            status\n            consent {\n              consentUrl\n            }\n          }\n          ... on AccountMembershipInvitationSentStatusInfo {\n            __typename\n            status\n            restrictedToAlias2: restrictedTo {\n              birthDate\n              firstName\n              lastName\n            }\n          }\n          ... on AccountMembershipEnabledStatusInfo {\n            __typename\n            status\n          }\n          ... on AccountMembershipDisabledStatusInfo {\n            __typename\n            status\n            reason\n          }\n          ... on AccountMembershipSuspendedStatusInfo {\n            __typename\n            reason\n            status\n          }\n        }\n        updatedAt\n        user {\n          firstName\n          lastName\n          mobilePhoneNumber\n        }\n      }\n    }\n  }\n  accountHolders {\n    edges {\n      node {\n        accounts {\n          edges {\n            node {\n              IBAN\n              BIC\n              virtualIbanEntries {\n                edges {\n                  node {\n                    IBAN\n                    BIC\n                  }\n                }\n              }\n              balances {\n                available {\n                  currency\n                  value\n                }\n              }\n            }\n          }\n        }\n        info {\n          name\n          type\n          ... on AccountHolderCompanyInfo {\n            registrationNumber\n            companyType\n            businessActivity\n            businessActivityDescription\n            monthlyPaymentVolume\n            name\n            type\n            ultimateBeneficialOwners {\n              id\n              parentCompanyShareRatio\n              type\n              ... on UltimateBeneficialDirectOwnerCompanyInfo {\n                id\n                name\n                parentCompanyShareRatio\n                registrationNumber\n                type\n              }\n              ... on UltimateBeneficialDirectOwnerIndividualInfo {\n                id\n                birthDate\n                firstName\n                lastName\n                type\n                parentCompanyShareRatio\n              }\n              ... on UltimateBeneficialIndirectOwnerCompanyInfo {\n                id\n                name\n                parentCompanyReference\n                parentCompanyShareRatio\n                registrationNumber\n                type\n              }\n              ... on UltimateBeneficialIndirectOwnerIndividualInfo {\n                id\n                birthDate\n                firstName\n                lastName\n                parentCompanyReference\n                parentCompanyShareRatio\n                type\n              }\n            }\n          }\n          ... on AccountHolderIndividualInfo {\n            __typename\n            employmentStatus\n            monthlyIncome\n            name\n            type\n            user {\n              firstName\n              lastName\n              mobilePhoneNumber\n            }\n          }\n        }\n      }\n    }\n  }\n}\n",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}{{ENV}}/graphql",
+									"host": [
+										"{{BASE_URL}}{{ENV}}"
+									],
+									"path": [
+										"graphql"
+									]
+								},
+								"description": "Display user and account information, including account membership. If you want to provide a dashboard to your clients you should use this query."
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Payment",
+					"item": [
+						{
+							"name": "Initiate Credit Transfer",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation initiateCreditTransfers($input: InitiateCreditTransfersInput!) {\n  initiateCreditTransfers(input: $input) {\n    __typename\n    ... on InitiateCreditTransfersSuccessPayload {\n      __typename\n      payment {\n        id\n        statusInfo {\n          ... on PaymentConsentPending {\n            __typename\n            status\n            consent {\n              id\n              consentUrl\n              redirectUrl\n            }\n          }\n          ... on PaymentInitiated {\n            __typename\n            status\n          }\n          ... on PaymentRejected {\n            __typename\n            reason\n            status\n          }\n        }\n      }\n    }\n    ... on AccountNotFoundRejection {\n      __typename\n      message\n    }\n    ... on ForbiddenRejection {\n      __typename\n      message\n    }\n  }\n}\n",
+										"variables": "{\n  \"input\": {\n    \"accountNumber\": \"ACCOUNT_NUMBER\",\n    \"consentRedirectUrl\": \"{{CALLBACK_URL}}\",\n    \"creditTransfers\":\n      {\n        \"sepaBeneficiary\": {\n          \"iban\": \"FR8510096000508296769926Z32\",\n          \"name\": \"Michel Dupont\",\n          \"isMyOwnIban\": false,\n          \"save\": false\n        },\n        \"amount\": {\n          \"currency\": \"EUR\",\n          \"value\": 1500\n        },\n        \"reference\": \"contract1234\",\n        \"label\": \"rent ZZ\"\n      }\n  }\n}"
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}{{ENV}}/graphql",
+									"host": [
+										"{{BASE_URL}}{{ENV}}"
+									],
+									"path": [
+										"graphql"
+									]
+								},
+								"description": "Initiate one SEPA credit transfer. This generates a consentURL which redirects the user to approve the operation through Swan app.\nDon't forget to replace the ACCOUNT_NUMBER variable."
+							},
+							"response": []
+						},
+						{
+							"name": "Initiate multiple Credit Transfers",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation initiateCreditTransfers($input: InitiateCreditTransfersInput!) {\n  initiateCreditTransfers(input: $input) {\n    __typename\n    ... on InitiateCreditTransfersSuccessPayload {\n      __typename\n      payment {\n        id\n        statusInfo {\n          ... on PaymentConsentPending {\n            __typename\n            status\n            consent {\n              id\n              consentUrl\n              redirectUrl\n            }\n          }\n          ... on PaymentInitiated {\n            __typename\n            status\n          }\n          ... on PaymentRejected {\n            __typename\n            reason\n            status\n          }\n        }\n      }\n    }\n    ... on AccountNotFoundRejection {\n      __typename\n      message\n    }\n    ... on ForbiddenRejection {\n      __typename\n      message\n    }\n  }\n}\n",
+										"variables": "{\n  \"input\": {\n    \"accountNumber\": \"10108894849\",\n    \"consentRedirectUrl\": \"{{CALLBACK_URL}}\",\n    \"creditTransfers\":\n      [\n        {\n            \"sepaBeneficiary\": {\n            \"iban\": \"FR8510096000508296769926Z32\",\n            \"name\": \"Michel Dupont\",\n            \"isMyOwnIban\": false,\n            \"save\": false\n            },\n            \"amount\": {\n            \"currency\": \"EUR\",\n            \"value\": 1500\n            },\n            \"reference\": \"contract1234\",\n            \"label\": \"rent XX\"\n        },\n        {\n            \"sepaBeneficiary\": {\n            \"iban\": \"DE90500105171716813118\",\n            \"name\": \"Johannes Schmidt\",\n            \"isMyOwnIban\": false,\n            \"save\": false\n            },\n            \"amount\": {\n            \"currency\": \"EUR\",\n            \"value\": 2400\n            },\n            \"reference\": \"contract6451\",\n            \"label\": \"rent YY\"\n        }\n      ]\n  }\n}"
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}{{ENV}}/graphql",
+									"host": [
+										"{{BASE_URL}}{{ENV}}"
+									],
+									"path": [
+										"graphql"
+									]
+								},
+								"description": "You can make one consent request for multiple SEPA credit transfers - two in this example. This generates a consentURL which redirects the user to approve the operation through Swan app.\nDon't forget to replace the ACCOUNT_NUMBER variable."
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Membership",
+					"item": [
+						{
+							"name": "Add Account Membership",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation AddAccountMembership($input: AddAccountMembershipInput!) {\n  addAccountMembership(input: $input) {\n     ... on AddAccountMembershipSuccessPayload {\n      __typename\n      accountMembership {\n        canInitiatePayments\n        canManageAccountMembership\n        canManageBeneficiaries\n        canViewAccount\n        createdAt\n        email\n        id\n        legalRepresentative\n        statusInfo {\n          ... on AccountMembershipBindingUserErrorStatusInfo {\n            __typename\n            birthDateMatchError\n            firstNameMatchError\n            idVerifiedMatchError\n            lastNameMatchError\n            status\n          }\n          ... on AccountMembershipConsentPendingStatusInfo {\n            __typename\n            consent {\n              consentUrl\n              createdAt\n              expiredAt\n              id\n              purpose\n              redirectUrl\n              requireSCA\n              status\n              startedAt\n              updatedAt\n            }\n            status\n          }\n          ... on AccountMembershipDisabledStatusInfo {\n            __typename\n            reason\n            status\n          }\n          ... on AccountMembershipEnabledStatusInfo {\n            __typename\n            status\n          }\n          ... on AccountMembershipInvitationSentStatusInfo {\n            __typename\n            status\n            restrictedTo {\n              birthDate\n              phoneNumber\n              lastName\n              firstName\n            }\n          }\n          ... on AccountMembershipSuspendedStatusInfo {\n            __typename\n            status\n            reason\n          }\n          status\n        }\n        updatedAt\n        version\n      }\n    }\n  }\n}\n",
+										"variables": "{\n  \"input\": {\n      \"accountId\": \"03edd690-33f0-495f-85b8-4cfe1b9d82c9\", \"email\": \"pro@benjamingrall.com\", \n      \"restrictedTo\": {\n          \"birthDate\": \"2000-01-03\",\n          \"firstName\": \"Benjamin\", \n          \"lastName\": \"Grall\", \n          \"phoneNumber\": \"+33678458765\"\n          }, \n          \"canViewAccount\": true, \n          \"canManageBeneficiaries\": true, \"canInitiatePayments\": true, \"canManageAccountMembership\": true, \n          \"consentRedirectUrl\": \"https://swan.io\"\n          }\n}"
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}{{ENV}}/graphql",
+									"host": [
+										"{{BASE_URL}}{{ENV}}"
+									],
+									"path": [
+										"graphql"
+									]
+								},
+								"description": "Add an account membership to a user using your account ID and the user's information."
+							},
+							"response": []
+						},
+						{
+							"name": "Bind Account Membership",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation MyMutation ($input:BindAccountMembershipInput!) {\n  bindAccountMembership(input: $input) {\n    ... on BindAccountMembershipSuccessPayload {\n      __typename\n      accountMembership {\n        id\n        version\n        canInitiatePayments\n        canManageAccountMembership\n        canManageBeneficiaries\n        canViewAccount\n        createdAt\n        email\n        legalRepresentative\n        statusInfo {\n          status\n          ... on AccountMembershipBindingUserErrorStatusInfo {\n            __typename\n            birthDateMatchError\n            firstNameMatchError\n            idVerifiedMatchError\n            lastNameMatchError\n            restrictedToAlias1:restrictedTo {\n              birthDate\n              firstName\n              lastName\n              phoneNumber\n            }\n            status\n          }\n          ... on AccountMembershipConsentPendingStatusInfo {\n            __typename\n            status\n            consent {\n              consentUrl\n              createdAt\n              expiredAt\n              id\n              purpose\n              redirectUrl\n              requireSCA\n              startedAt\n              status\n              updatedAt\n            }\n          }\n          ... on AccountMembershipDisabledStatusInfo {\n            __typename\n            reason\n            status\n          }\n          ... on AccountMembershipEnabledStatusInfo {\n            __typename\n            status\n          }\n          ... on AccountMembershipInvitationSentStatusInfo {\n            __typename\n            status\n            restrictedToAlias2:restrictedTo {\n              birthDate\n              firstName\n              lastName\n              phoneNumber\n            }\n          }\n          ... on AccountMembershipSuspendedStatusInfo {\n            __typename\n            reason\n            status\n          }\n        }\n        updatedAt\n      }\n    }\n  }\n}",
+										"variables": "{\n  \"input\": {\n      \"accountMembershipId\": \"224ac82a-e163-494c-9393-2037befc20d6\"\n    }\n}"
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}{{ENV}}/graphql",
+									"host": [
+										"{{BASE_URL}}{{ENV}}"
+									],
+									"path": [
+										"graphql"
+									]
+								},
+								"description": "Bind an invited user with the account membership. Don't forget to replace the TO_FILL_WITH_MEMBERSHIP_ID variable."
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Card",
+					"item": [
+						{
+							"name": "Add Card",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation AddCards {\n  addCards(\n    input: {\n      cards: [\n        {\n          accountMembershipId: \"67ca3b88-3b13-476a-a873-24fdf45d9e3d\"\n          withdrawal: true\n          international: true\n          nonMainCurrencyTransactions: true\n          eCommerce: true\n          spendingLimit: {\n            period: Monthly\n            amount: { value: \"1000\", currency: \"EUR\" }\n          }\n        }\n      ]\n      consentRedirectUrl: \"https://swan.io\"\n    }\n  ) {\n    ... on AddCardsSuccessPayload {\n      cards {\n        statusInfo {\n          ... on CardConsentPendingStatusInfo {\n            consent {\n              consentUrl\n            }\n          }\n          ... on CardCanceledStatusInfo {\n            __typename\n            reason\n          }\n          ... on CardCancelingStatusInfo {\n            __typename\n            reason\n          }\n          ... on CardEnabledStatusInfo {\n            __typename\n            status\n          }\n          ... on CardProcessingStatusInfo {\n            __typename\n            status\n          }\n        }\n      }\n    }\n    ... on TooManyItemsRejection {\n      message\n    }\n    ... on CardProductDisabledRejection {\n      __typename\n      message\n    }\n    ... on CardProductNotApplicableToPhysicalCardsRejection {\n      __typename\n      message\n    }\n    ... on CardProductSuspendedRejection {\n      __typename\n      message\n    }\n    ... on AccountMembershipNotAllowedRejection {\n      __typename\n      message\n    }\n    ... on EnabledCardDesignNotFoundRejection {\n      __typename\n      message\n    }\n  }\n}\n",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}{{ENV}}/graphql",
+									"host": [
+										"{{BASE_URL}}{{ENV}}"
+									],
+									"path": [
+										"graphql"
+									]
+								},
+								"description": "Add a new card to a Membership. To initiate this mutation, you must have canManageAccountMembership rights."
+							},
+							"response": []
+						},
+						{
+							"name": "Add Single Use Virtual Card",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation MyMutation($input: AddSingleUseVirtualCardInput!) {\n  addSingleUseVirtualCard(input: $input) {\n    ... on AddSingleUseVirtualCardSuccessForUserPayload {\n      __typename\n      card {\n        id\n        expiryDate\n        statusInfo {\n          status\n          ... on CardConsentPendingStatusInfo {\n            __typename\n            consent {\n              consentUrl\n              id\n            }\n          }\n        }\n      }\n    }\n  }\n}\n",
+										"variables": "{\n    \"input\": {\n        \"accountMembershipId\": \"TO_FILL_WITH_MEMBERSHIP_ID\",\n        \"spendingLimit\": {\n            \"period\": \"Monthly\",\n            \"amount\": {\n                \"value\": \"100\",\n                \"currency\": \"EUR\"\n            }\n        },\n      \"consentRedirectUrl\": \"{{CALLBACK_URL}}\"\n    }\n}"
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}{{ENV}}/graphql",
+									"host": [
+										"{{BASE_URL}}{{ENV}}"
+									],
+									"path": [
+										"graphql"
+									]
+								},
+								"description": "Add a new single use virtual card to a Membership. To initiate this mutation, you must have canManageAccountMembership rights."
+							},
+							"response": []
+						},
+						{
+							"name": "Print Physical Card",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											""
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation MyMutation($input: PrintPhysicalCardInput!) {\n  printPhysicalCard(input: $input) {\n    ... on PrintPhysicalCardSuccessPayload {\n      __typename\n      physicalCard {\n        expiryDate\n        identifier\n        statusInfo {\n          status\n        }\n      }\n    }\n    ... on BadRequestRejection {\n      __typename\n      message\n    }\n    ... on AlreadyValidPhysicalCardRejection {\n      __typename\n      message\n    }\n  }\n}\n",
+										"variables": "{\n    \"input\": {\n        \"cardId\": \"TO_FILL_WITH_CARD_ID\",\n        \"address\": {\n            \"addressLine1\": \"1 Rue de la Paix\", \n            \"city\": \"Paris\", \n            \"country\": \"FRA\", \n            \"postalCode\": \"75002\"\n        },\n        \"choosePINCode\": false,\n        \"consentRedirectUrl\": \"{{CALLBACK_URL}}\"\n    }\n}"
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}{{ENV}}/graphql",
+									"host": [
+										"{{BASE_URL}}{{ENV}}"
+									],
+									"path": [
+										"graphql"
+									]
+								},
+								"description": "Print a physical card associated to the virtual card."
+							},
+							"response": []
+						},
+						{
+							"name": "Get Card info",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "query MyQuery {\n  cards {\n    edges {\n      node {\n        cardUrl\n        id\n        accountMembership {\n          user {\n            firstName\n            lastName\n          }\n        }\n      }\n    }\n  }\n}",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}{{ENV}}/graphql",
+									"host": [
+										"{{BASE_URL}}{{ENV}}"
+									],
+									"path": [
+										"graphql"
+									]
+								},
+								"description": "Get a card's ID and use the URL to display a preview of the card (like in an iFrame)."
+							},
+							"response": []
+						},
+						{
+							"name": "View Card Number",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "mutation ViewCardNumbers($input: ViewCardNumbersInput! ) {\n  viewCardNumbers(\n    input: $input\n  ) {\n    __typename\n    ... on ViewCardNumbersSuccessPayload {\n      consent {\n        id\n        consentUrl\n      }\n    }\n  }\n}",
+										"variables": "{\n  \"input\": {\n      \"cardId\": \"TO_FILL_WITH_CARD_ID\", \n      \"consentRedirectUrl\": \"{{CALLBACK_URL}}\"\n      }\n}"
+									}
+								},
+								"url": {
+									"raw": "{{BASE_URL}}{{ENV}}/graphql",
+									"host": [
+										"{{BASE_URL}}{{ENV}}"
+									],
+									"path": [
+										"graphql"
+									]
+								},
+								"description": "Get the consent URL to enable card number disclosure. The card number is displayed after the CardURL."
+							},
+							"response": []
+						}
+					]
+				}
+			],
+			"description": "The User Access Token is used when you act on behalf of an individual user. To get a user access token, you have to use the OAuth2 flow (also called grant type): Authorization code. It's totally similar to how users log in to a web application using their Facebook or Google account. Here are a few queries/mutations that may be useful as you get started with your integration. For more details, check out our documentation at https://docs.swan.io/\n\n",
+			"auth": {
+				"type": "oauth2",
+				"oauth2": [
+					{
+						"key": "grant_type",
+						"value": "authorization_code",
+						"type": "string"
+					},
+					{
+						"key": "tokenType",
+						"value": "",
+						"type": "string"
+					},
+					{
+						"key": "accessToken",
+						"value": "",
+						"type": "string"
+					},
+					{
+						"key": "scope",
+						"value": "openid offline accountmembership:bind",
+						"type": "string"
+					},
+					{
+						"key": "useBrowser",
+						"value": false,
+						"type": "boolean"
+					},
+					{
+						"key": "redirect_uri",
+						"value": "{{CALLBACK_URL}}",
+						"type": "string"
+					},
+					{
+						"key": "authUrl",
+						"value": "{{AUTH_ENDPOINT}}",
+						"type": "string"
+					},
+					{
+						"key": "accessTokenUrl",
+						"value": "{{TOKEN_ENDPOINT}}",
+						"type": "string"
+					},
+					{
+						"key": "client_authentication",
+						"value": "body",
+						"type": "string"
+					},
+					{
+						"key": "state",
+						"value": "123412341234",
+						"type": "string"
+					},
+					{
+						"key": "tokenName",
+						"value": "MyUserToken",
+						"type": "string"
+					},
+					{
+						"key": "clientSecret",
+						"value": "{{CLIENT_SECRET}}",
+						"type": "string"
+					},
+					{
+						"key": "clientId",
+						"value": "{{CLIENT_ID}}",
+						"type": "string"
+					},
+					{
+						"key": "addTokenTo",
+						"value": "header",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "CLIENT_ID",
+			"value": "{{CLIENT_ID_TO_REPLACE}}"
+		},
+		{
+			"key": "CLIENT_SECRET",
+			"value": "{{CLIENT_SECRET_TO_REPLACE}}"
+		},
+		{
+			"key": "BASE_URL",
+			"value": "https://api.swan.io/"
+		},
+		{
+			"key": "ENV",
+			"value": "sandbox-partner"
+		},
+		{
+			"key": "TOKEN_ENDPOINT",
+			"value": "https://oauth.swan.io/oauth2/token"
+		},
+		{
+			"key": "AUTH_ENDPOINT",
+			"value": "https://oauth.swan.io/oauth2/auth"
+		},
+		{
+			"key": "CALLBACK_URL",
+			"value": "{{URL_TO_REPLACE}}"
+		}
+	]
+}
